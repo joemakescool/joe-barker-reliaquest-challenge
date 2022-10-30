@@ -14,10 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class EmployeeRepository {
@@ -101,4 +98,26 @@ public class EmployeeRepository {
 
         return status.toString();
     }
+
+
+    public String deleteEmployeeById(String id) throws IOException, URISyntaxException, ParseException, InterruptedException {
+        // get all the employees, and return that id to be deleted
+        StringBuilder employeeName = new StringBuilder();
+
+        Map<String, Employee> employeeMap = new HashMap<>();
+        List<Employee> employeeList = this.getAllEmployees();
+        for (Employee employee : employeeList) {
+            String employeeId = String.valueOf(employee.getId());
+            employeeMap.put(employeeId, employee);
+        }
+
+        if (employeeMap.containsKey(id)) {
+            Employee employee = employeeMap.get(id);
+            employeeName.append(employee.getEmployeeName());
+        }
+
+        return employeeName.toString();
+    }
+
+
 }

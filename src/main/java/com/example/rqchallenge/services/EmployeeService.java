@@ -1,6 +1,5 @@
 package com.example.rqchallenge.services;
 
-import com.example.rqchallenge.api.HttpRequestApi;
 import com.example.rqchallenge.entities.Employee;
 import com.example.rqchallenge.entities.EmployeeHighestSalaryComparable;
 import com.example.rqchallenge.repositories.employee.EmployeeRepository;
@@ -19,10 +18,6 @@ public class EmployeeService {
     EmployeeRepository employeeRepository;
 
 
-    /**
-     *
-     * @return - the list of all the employees
-     */
     public List<Employee> getAllEmployeesService() throws IOException, URISyntaxException, ParseException, InterruptedException {
         return employeeRepository.getAllEmployees();
     }
@@ -51,11 +46,6 @@ public class EmployeeService {
         return employeeRepository.getEmployeeById(id);
     }
 
-    /**
-     *
-     * description -  this should return a single integer indicating the highest salary of all employees
-     * @return - integer of the highest salary
-     */
     public Integer getHighestSalaryOfEmployeesService() throws IOException, URISyntaxException, ParseException, InterruptedException {
         Integer highestSalary = 0;
 
@@ -71,23 +61,17 @@ public class EmployeeService {
         return highestSalary;
     }
 
-    /**
-     * get the whole list, sort the list from highest to lowest and send back the top 10 in that sorted list
-     * @throws IOException
-     * @throws URISyntaxException
-     * @throws ParseException
-     * @throws InterruptedException
-     */
     public List<String> getTopTenHighestEarningEmployeeNamesService() throws IOException, URISyntaxException, ParseException, InterruptedException {
 
         List<String> highestEarnersNameList = new ArrayList<>();
 
-        // get this list
+        // get the whole list of employees
         List<EmployeeHighestSalaryComparable> employeeList = employeeRepository.getEmployeeHighestSalaryComparable();
 
-        // sort it
+        // sort that list from highest to lower
         Collections.sort(employeeList);
-        // do a loop of 10 and put the names into that list and send it back
+
+        // do a loop to get the top 10 and put the names into that list and send it back
         for (int i = 0; i < 10; i++) {
             Employee employee = employeeList.get(i);
             String name = employee.getEmployeeName();
@@ -97,20 +81,12 @@ public class EmployeeService {
         return highestEarnersNameList;
     }
 
-
-    /**
-     * this should return a status of success or failed based on if an employee was created
-     * @param employeeInput - the object the is to be put in
-     *                      { name: '', salary: '', age: '' }
-     * @return - string of the status (i.e. success or failed)
-     */
-    public String createEmployee(Map<String, Object> employeeInput) throws URISyntaxException, IOException, InterruptedException {
+    public String createEmployeeService(Map<String, Object> employeeInput) throws URISyntaxException, IOException, InterruptedException {
         return employeeRepository.createEmployee(employeeInput);
     }
 
-    public void deleteEmployee() throws URISyntaxException, IOException, InterruptedException {
-        HttpRequestApi httpRequestApi = new HttpRequestApi();
-        httpRequestApi.httpRequestDeleteEmployee();
+    public String deleteEmployeeService(String id) throws IOException, URISyntaxException, ParseException, InterruptedException {
+        return employeeRepository.deleteEmployeeById(id);
     }
 
 

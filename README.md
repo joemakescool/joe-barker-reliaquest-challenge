@@ -1,3 +1,14 @@
+# My patter of the project
+controller -> service -> repository -> httpRequestApi
+
+1. The controller takes the end api, 
+2. controller calls a service -> a service which does work or calls to repositories to get information to work on
+3. service calls repository -> the repository has information about the employee objects
+4. repository calls httpRequestApi -> the calls to the api to get the information. The repository is responsible to 
+parse information that comes back.
+5. and this sends thing back up the chain to the controller httpRequestApi -> repository -> service -> controller
+6. controller sends the information back out
+
 # Coding Challenge
 
 ### In this assessment you will be tasked with filling out the functionality of different methods that will be listed further down.
