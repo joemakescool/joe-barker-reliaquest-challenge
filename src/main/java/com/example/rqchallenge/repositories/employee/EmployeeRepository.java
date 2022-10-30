@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class EmployeeRepository {
@@ -77,4 +78,27 @@ public class EmployeeRepository {
         return objectMapper.readValue(t.toString(), Employee.class);
     }
 
+    public String createEmployee(Map<String, Object> employeeInput) throws URISyntaxException, IOException, InterruptedException {
+        StringBuilder status = new StringBuilder();
+
+        HttpRequestApi httpRequestApi = new HttpRequestApi();
+        // parse the employeeInput map
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{ ");
+        for (Map.Entry<String, Object> entry : employeeInput.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue().toString();
+            stringBuilder.append(key).append(": ").append(value).append(",");
+        }
+        stringBuilder.append(" }");
+
+        String response = httpRequestApi.httpRequestCreateEmployee(stringBuilder.toString());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(response);
+        JsonNode t = jsonNode.get("status");
+        status.append(t);
+
+        return status.toString();
+    }
 }

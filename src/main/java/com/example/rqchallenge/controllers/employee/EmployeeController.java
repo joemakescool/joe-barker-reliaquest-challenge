@@ -99,17 +99,14 @@ public class EmployeeController implements IEmployeeController {
 
     @Override
     @PostMapping("/create")
-    public ResponseEntity<Employee> createEmployee(@RequestBody Map<String, Object> employeeInput) {
+    public ResponseEntity<String> createEmployee(@RequestBody Map<String, Object> employeeInput) {
 
         try {
-            employeeService.createEmployee(employeeInput);
-            Employee employee = new Employee();
-            employee.setEmployeeName("Joe Barker");
-            return ResponseEntity.accepted().body(employee);
+            String status = employeeService.createEmployee(employeeInput);
+            return ResponseEntity.accepted().body(status);
 
         } catch (Exception e) {
-            System.out.println("hello i am a man " + e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // make this send back something else
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Employee created failed", e); // make this send back something else
         }
 
     }

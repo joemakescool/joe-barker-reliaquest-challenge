@@ -98,10 +98,14 @@ public class EmployeeService {
     }
 
 
-
-    public void createEmployee(Map<String, Object> employeeInput) throws URISyntaxException, IOException, InterruptedException {
-        HttpRequestApi httpRequestApi = new HttpRequestApi();
-        httpRequestApi.httpRequestCreateEmployee();
+    /**
+     * this should return a status of success or failed based on if an employee was created
+     * @param employeeInput - the object the is to be put in
+     *                      { name: '', salary: '', age: '' }
+     * @return - string of the status (i.e. success or failed)
+     */
+    public String createEmployee(Map<String, Object> employeeInput) throws URISyntaxException, IOException, InterruptedException {
+        return employeeRepository.createEmployee(employeeInput);
     }
 
     public void deleteEmployee() throws URISyntaxException, IOException, InterruptedException {

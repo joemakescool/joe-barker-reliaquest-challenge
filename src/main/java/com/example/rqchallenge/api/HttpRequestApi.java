@@ -8,6 +8,8 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class HttpRequestApi {
@@ -26,7 +28,6 @@ public class HttpRequestApi {
 
     public String httpRequestGetEmployeeById(String id) throws URISyntaxException, IOException, InterruptedException {
         String urlString = "https://dummy.restapiexample.com/api/v1/employee/" + id;
-        System.out.println("GEtting by the id here! " + id);
         HttpClient httpClient = HttpClient.newHttpClient();
 
         HttpRequest getRequest = HttpRequest.newBuilder()
@@ -34,29 +35,23 @@ public class HttpRequestApi {
                 .build();
 
         HttpResponse<String> response = httpClient.send(getRequest, HttpResponse.BodyHandlers.ofString());
-        System.out.println("my response: " + response.body());
         return response.body();
     }
 
-    public void httpRequestCreateEmployee() throws URISyntaxException, IOException, InterruptedException {
+    public String httpRequestCreateEmployee(String jsonObject) throws URISyntaxException, IOException, InterruptedException {
 
         String urlString = "https://dummy.restapiexample.com/api/v1/create";
         HttpClient httpClient = HttpClient.newHttpClient(); // sends out the request
-        String bodyObject = "{\n" +
-                "    \"name\" : \"Dzmitry\"," +
-                "    \"salary\" : 1000," +
-                "    \"age\" : 28" +
-                "}";
 
         HttpRequest postRequest = HttpRequest.newBuilder()
                 .uri(new URI(urlString))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(bodyObject))
+                .POST(HttpRequest.BodyPublishers.ofString(jsonObject))
                 .build();
 
         HttpResponse<String> postResponse = httpClient.send(postRequest, HttpResponse.BodyHandlers.ofString());
         System.out.println(postResponse.body());
-        postResponse.body();
+        return postResponse.body();
     }
 
 
