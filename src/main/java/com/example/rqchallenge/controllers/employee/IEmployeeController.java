@@ -26,7 +26,13 @@ public interface IEmployeeController {
     @GetMapping("/topTenHighestEarningEmployeeNames")
     ResponseEntity<List<String>> getTopTenHighestEarningEmployeeNames();
 
-    @PostMapping()
+    /**
+     * output - string of the status (i.e. success)
+     * description -  this should return a status of success or failed based on if an employee was created
+     * @param employeeInput
+     * @return - string of the status (i.e. success) or faild
+     */
+    @PostMapping("/create")
     ResponseEntity<Employee> createEmployee(@RequestBody Map<String, Object> employeeInput);
 
     @DeleteMapping("/{id}")
