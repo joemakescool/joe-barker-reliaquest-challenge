@@ -1,10 +1,12 @@
 package com.example.rqchallenge.controllers.employee;
 
 import com.example.rqchallenge.entities.Employee;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ import java.util.Map;
 public interface IEmployeeController {
 
     @GetMapping()
-    ResponseEntity<List<Employee>> getAllEmployees() throws IOException;
+    ResponseEntity<List<Employee>> getAllEmployees();
 
     @GetMapping("/search/{searchString}")
     ResponseEntity<List<Employee>> getEmployeesByNameSearch(@PathVariable String searchString);

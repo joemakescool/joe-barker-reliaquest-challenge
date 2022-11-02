@@ -1,4 +1,4 @@
-package errors;
+package com.example.rqchallenge.errors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -42,10 +42,7 @@ public class ErrorResponse {
             String message,
             String stackTrace
     ) {
-        this(
-                httpStatus,
-                message
-        );
+        this(httpStatus, message);
 
         this.stackTrace = stackTrace;
     }
@@ -56,12 +53,7 @@ public class ErrorResponse {
             String stackTrace,
             Object data
     ) {
-        this(
-                httpStatus,
-                message,
-                stackTrace
-        );
-
+        this(httpStatus, message, stackTrace);
         this.data = data;
     }
 

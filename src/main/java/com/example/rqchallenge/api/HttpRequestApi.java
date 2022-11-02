@@ -8,14 +8,12 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class HttpRequestApi {
 
     public String httpRequestGetAllEmployees() throws IOException, URISyntaxException, InterruptedException {
-        String urlString = "http://dummy.restapiexample.com/api/v1/employees";
+        String urlString = APIConstants.BASE_URL + "/employees";
         HttpClient httpClient = HttpClient.newHttpClient();
 
         HttpRequest getRequest = HttpRequest.newBuilder()
@@ -23,11 +21,12 @@ public class HttpRequestApi {
                 .build();
 
         HttpResponse<String> response = httpClient.send(getRequest, HttpResponse.BodyHandlers.ofString());
+
         return response.body();
     }
 
     public String httpRequestGetEmployeeById(String id) throws URISyntaxException, IOException, InterruptedException {
-        String urlString = "https://dummy.restapiexample.com/api/v1/employee/" + id;
+        String urlString = APIConstants.BASE_URL + "/employee/" + id;
         HttpClient httpClient = HttpClient.newHttpClient();
 
         HttpRequest getRequest = HttpRequest.newBuilder()
@@ -40,7 +39,7 @@ public class HttpRequestApi {
 
     public String httpRequestCreateEmployee(String jsonObject) throws URISyntaxException, IOException, InterruptedException {
 
-        String urlString = "https://dummy.restapiexample.com/api/v1/create";
+        String urlString = APIConstants.BASE_URL + "/create";
         HttpClient httpClient = HttpClient.newHttpClient(); // sends out the request
 
         HttpRequest postRequest = HttpRequest.newBuilder()
@@ -56,7 +55,7 @@ public class HttpRequestApi {
 
 
     public void httpRequestDeleteEmployee() throws URISyntaxException, IOException, InterruptedException {
-        String urlString = "http://dummy.restapiexample.com/api/v1/delete/4710";
+        String urlString = APIConstants.BASE_URL + "/delete/4710";
 
         HttpClient httpClient = HttpClient.newHttpClient();
 

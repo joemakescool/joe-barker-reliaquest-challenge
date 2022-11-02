@@ -3,11 +3,14 @@ package com.example.rqchallenge.services;
 import com.example.rqchallenge.entities.Employee;
 import com.example.rqchallenge.entities.EmployeeHighestSalaryComparable;
 import com.example.rqchallenge.repositories.employee.EmployeeRepository;
+import com.example.rqchallenge.errors.CustomErrorException;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -43,6 +46,7 @@ public class EmployeeService {
     }
 
     public Employee getEmployeeByIdService(String id) throws URISyntaxException, IOException, InterruptedException {
+        id = id.trim();
         return employeeRepository.getEmployeeById(id);
     }
 
@@ -85,9 +89,8 @@ public class EmployeeService {
         return employeeRepository.createEmployee(employeeInput);
     }
 
-    public String deleteEmployeeService(String id) throws IOException, URISyntaxException, ParseException, InterruptedException {
+    public String deleteEmployeeService(String id) throws Exception {
+        id = id.trim();
         return employeeRepository.deleteEmployeeById(id);
     }
-
-
 }

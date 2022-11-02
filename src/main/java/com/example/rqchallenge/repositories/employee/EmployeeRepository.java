@@ -5,9 +5,6 @@ import com.example.rqchallenge.entities.Employee;
 import com.example.rqchallenge.entities.EmployeeHighestSalaryComparable;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,7 +20,7 @@ public class EmployeeRepository {
     HttpRequestApi httpRequestApi;
 
 
-    public List<Employee> getAllEmployees() throws IOException, URISyntaxException, InterruptedException, ParseException {
+    public List<Employee> getAllEmployees() throws IOException, URISyntaxException, InterruptedException {
 
         String employeeList = httpRequestApi.httpRequestGetAllEmployees(); // get the data off this list for it to send back all the employees
         ArrayList<Employee> employeeArrayList = new ArrayList<>(); // for the parsing of Employee
@@ -72,14 +69,14 @@ public class EmployeeRepository {
 
         JsonNode t = jsonNode.get("data"); // where the data for the request is, this contains the list of employees
 
-        return objectMapper.readValue(t.toString(), Employee.class);
+        return objectMapper.readValue(t.toString(), Employee.class); // create the Employee object from the JSON data node
     }
 
     public String createEmployee(Map<String, Object> employeeInput) throws URISyntaxException, IOException, InterruptedException {
         StringBuilder status = new StringBuilder();
 
         HttpRequestApi httpRequestApi = new HttpRequestApi();
-        // parse the employeeInput map
+        // parse the employeeInput map and make into an JSON object
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{ ");
         for (Map.Entry<String, Object> entry : employeeInput.entrySet()) {
@@ -100,7 +97,7 @@ public class EmployeeRepository {
     }
 
 
-    public String deleteEmployeeById(String id) throws IOException, URISyntaxException, ParseException, InterruptedException {
+    public String deleteEmployeeById(String id) throws Exception {
         // get all the employees, and return that id to be deleted
         StringBuilder employeeName = new StringBuilder();
 
@@ -111,9 +108,15 @@ public class EmployeeRepository {
             employeeMap.put(employeeId, employee);
         }
 
-        if (employeeMap.containsKey(id)) {
-            Employee employee = employeeMap.get(id);
-            employeeName.append(employee.getEmployeeName());
+        try {
+            if (employeeMap.containsKey(id)) {
+                Employee employee = employeeMap.get(id);
+                employeeName.append(employee.getEmployeeName());
+            } else {
+                throw new Exception("Employee could not be delete because employee does not exist");
+            }
+        } catch(Exception e) {
+            throw new Exception("Employee could not be delete because employee does not exist");
         }
 
         return employeeName.toString();

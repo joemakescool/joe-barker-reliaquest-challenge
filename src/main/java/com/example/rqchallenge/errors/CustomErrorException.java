@@ -1,8 +1,6 @@
-package errors;
+package com.example.rqchallenge.errors;
 
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 public class CustomErrorException extends RuntimeException {

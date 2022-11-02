@@ -2,14 +2,18 @@ package com.example.rqchallenge.controllers.employee;
 
 import com.example.rqchallenge.entities.Employee;
 import com.example.rqchallenge.services.EmployeeService;
+import com.example.rqchallenge.errors.CustomErrorException;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +27,7 @@ public class EmployeeController implements IEmployeeController {
 
     @RequestMapping("/hello")
     public String controllerSaysHello() {
-        System.out.println("EmployeeController says hello :)!");
-        return "Hello from employee controller :)!";
+        return "Employee Controller says hello!";
     }
 
     /**
@@ -33,15 +36,14 @@ public class EmployeeController implements IEmployeeController {
      */
     @Override
     @RequestMapping("/employees")
-    public ResponseEntity<List<Employee>> getAllEmployees() throws IOException {
-
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        List<Employee> employeeList = null;
         try {
-            List<Employee> employeeList = employeeService.getAllEmployeesService();
-            return ResponseEntity.accepted().body(employeeList);
-
-        } catch (Exception e) {
-            throw new IOException(e);
+            employeeList = employeeService.getAllEmployeesService();
+        } catch (IOException | URISyntaxException | ParseException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
+        return ResponseEntity.accepted().body(employeeList);
     }
 
     /**
@@ -59,13 +61,14 @@ public class EmployeeController implements IEmployeeController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "searching data can only be letters");
         }
 
+        List<Employee> employeeList = null;
         try {
-            List<Employee> employeeList = employeeService.getEmployeesByNameSearchService(searchString);
-            return ResponseEntity.accepted().body(employeeList);
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "employee list not found", e);
+            employeeList = employeeService.getEmployeesByNameSearchService(searchString);
+        } catch (IOException | URISyntaxException | ParseException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
+
+        return ResponseEntity.accepted().body(employeeList);
     }
 
     /**
@@ -76,15 +79,16 @@ public class EmployeeController implements IEmployeeController {
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") String id) {
-        id = id.trim();
 
+        Employee employee = null;
         try {
-            Employee employee = employeeService.getEmployeeByIdService(id);
-            return ResponseEntity.accepted().body(employee);
+            employee = employeeService.getEmployeeByIdService(id);
 
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "employee id could not be processed", e);
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
+
+        return ResponseEntity.accepted().body(employee);
     }
 
     /**
@@ -94,13 +98,15 @@ public class EmployeeController implements IEmployeeController {
     @Override
     @GetMapping("/highestSalary")
     public ResponseEntity<Integer> getHighestSalaryOfEmployees() {
-        try {
-            Integer highestSalary = employeeService.getHighestSalaryOfEmployeesService();
-            return ResponseEntity.accepted().body(highestSalary);
 
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Salary could not be found", e);
+        Integer highestSalary = null;
+        try {
+            highestSalary = employeeService.getHighestSalaryOfEmployeesService();
+        } catch (IOException | URISyntaxException | ParseException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
+
+        return ResponseEntity.accepted().body(highestSalary);
     }
 
     /**
@@ -110,12 +116,15 @@ public class EmployeeController implements IEmployeeController {
     @Override
     @GetMapping("/topTenHighestEarningEmployeeNames")
     public ResponseEntity<List<String>> getTopTenHighestEarningEmployeeNames() {
+
+        List<String> highestEarnersList = null;
         try {
-            List<String> highestEarnersList = employeeService.getTopTenHighestEarningEmployeeNamesService();
-            return ResponseEntity.accepted().body(highestEarnersList);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Salary could not be found", e);
+            highestEarnersList = employeeService.getTopTenHighestEarningEmployeeNamesService();
+        } catch (IOException | URISyntaxException | ParseException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
+
+        return ResponseEntity.accepted().body(highestEarnersList);
     }
 
     /**
@@ -128,18 +137,19 @@ public class EmployeeController implements IEmployeeController {
     @PostMapping("/create")
     public ResponseEntity<String> createEmployee(@RequestBody Map<String, Object> employeeInput) {
 
+        String status = null;
         try {
-            String status = employeeService.createEmployeeService(employeeInput);
-            return ResponseEntity.accepted().body(status);
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Employee created failed", e); // make this send back something else
+            status = employeeService.createEmployeeService(employeeInput);
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
+        return ResponseEntity.accepted().body(status);
     }
 
     /**
-     * the API on the dummy api.com isn't or wasn't working for me. So I just returned the name of the employee that is to be deleted.
+     * the API on the dummy api.com isn't or wasn't working for me. API down.
+     * So I just returned the name of the employee that is to be deleted.
      * description - this should delete the employee with specified id given
      * @param id - the id of the employee to be deleted
      * @return - the name of the deleted employee
@@ -147,14 +157,13 @@ public class EmployeeController implements IEmployeeController {
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmployeeById(String id) {
-        System.out.println("Delete id: " + id);
-        id = id.trim();
+        String employeeDeleted = null;
         try {
-            String employeeDeleted = employeeService.deleteEmployeeService(id);
-            return ResponseEntity.accepted().body(employeeDeleted);
+            employeeDeleted = employeeService.deleteEmployeeService(id);
         } catch (Exception e) {
-            System.out.println(e);
+            throw new RuntimeException(e);
         }
-        return ResponseEntity.accepted().body("lets delete stuff " + id);
+
+        return ResponseEntity.accepted().body(employeeDeleted);
     }
 }
