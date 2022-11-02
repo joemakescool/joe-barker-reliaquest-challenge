@@ -83,7 +83,6 @@ public class EmployeeController implements IEmployeeController {
         Employee employee = null;
         try {
             employee = employeeService.getEmployeeByIdService(id);
-
         } catch (URISyntaxException | IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }

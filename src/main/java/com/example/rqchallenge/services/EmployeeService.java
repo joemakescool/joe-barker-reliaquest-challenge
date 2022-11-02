@@ -26,9 +26,9 @@ public class EmployeeService {
     }
 
     /**
-     *  this should return all employees whose name contains or matches the string input provided
+     *  this finds all employees whose name contains or matches the string input provided
      * @param searchString - string to search on
-     * @return - the list of employees the fit the string description
+     * @return - the list of employees the fit the string parameter description
      */
     public List<Employee> getEmployeesByNameSearchService(String searchString) throws IOException, URISyntaxException, ParseException, InterruptedException {
 
@@ -45,11 +45,28 @@ public class EmployeeService {
         return matching;
     }
 
+    /**
+     *
+     * @param id - id of the employee
+     * @return - an employee object
+     */
     public Employee getEmployeeByIdService(String id) throws URISyntaxException, IOException, InterruptedException {
         id = id.trim();
-        return employeeRepository.getEmployeeById(id);
+        Employee employee = null;
+
+        employee = employeeRepository.getEmployeeById(id);
+
+        if (employee == null) {
+            throw new CustomErrorException("Employee is not found");
+        }
+
+        return employee;
     }
 
+    /**
+     * gets the list of employees, and loops through them all while keeping track of the highest
+     * @return - integer of the highest salary
+     */
     public Integer getHighestSalaryOfEmployeesService() throws IOException, URISyntaxException, ParseException, InterruptedException {
         Integer highestSalary = 0;
 
@@ -65,6 +82,10 @@ public class EmployeeService {
         return highestSalary;
     }
 
+    /**
+     * finds the top ten earners by getting all the employees, sorting them from highest to lowest and returning the top 10.
+     * @return - a list of the top ten earning employees
+     */
     public List<String> getTopTenHighestEarningEmployeeNamesService() throws IOException, URISyntaxException, ParseException, InterruptedException {
 
         List<String> highestEarnersNameList = new ArrayList<>();

@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
 
+/**
+ * A storage/retrieval system that makes api calls to the dummy 'database'
+ */
 @Repository
 public class EmployeeRepository {
 
@@ -86,11 +89,12 @@ public class EmployeeRepository {
         }
         stringBuilder.append(" }");
 
+        // make call to create the employee
         String response = httpRequestApi.httpRequestCreateEmployee(stringBuilder.toString());
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(response);
-        JsonNode t = jsonNode.get("status");
+        JsonNode t = jsonNode.get("status"); // parse out the status off the response
         status.append(t);
 
         return status.toString();
