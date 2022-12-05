@@ -3,15 +3,24 @@ package com.example.rqchallenge.controllers.employee;
 import com.example.rqchallenge.entities.Employee;
 import com.example.rqchallenge.services.EmployeeService;
 import com.example.rqchallenge.errors.CustomErrorException;
+import com.example.rqchallenge.validator.ContactNumberConstraint;
+import com.example.rqchallenge.validator.EvenNumber;
+import com.example.rqchallenge.validator.StringValidator;
+import lombok.Getter;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -19,6 +28,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/rq")
+@Validated
 public class EmployeeController implements IEmployeeController {
 
     @Autowired
@@ -29,6 +39,26 @@ public class EmployeeController implements IEmployeeController {
     public String controllerSaysHello() {
         return "Employee Controller says hello!";
     }
+
+    @GetMapping("/validatePathVariableExmp/{id}")
+    public ResponseEntity<String> validatePathVariableExmp(@PathVariable("id") @Valid Long id) {
+        System.out.println("THe id number is " + id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping("/validatePhone/{s}")
+    public String validatePhoneNumber(
+            @PathVariable("s") String searchString
+    ) {
+        System.out.println("Print the phone number: " + searchString.toString());
+//        if (result.hasErrors()) {
+//            return "Has errors boy!";
+//        }
+//        m.addAttribute("message", "Successfully saved phone " + searchString.toString());
+
+        return "Validating the input";
+    }
+
 
     /**
      *
